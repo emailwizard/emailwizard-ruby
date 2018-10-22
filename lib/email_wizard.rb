@@ -1,5 +1,5 @@
 require "email_wizard/version"
 
-module EmailWizard
-  # Your code goes here...
-end
+require 'email_wizard/errors'
+require 'email_wizard/config'
+require 'email_wizard/client'
