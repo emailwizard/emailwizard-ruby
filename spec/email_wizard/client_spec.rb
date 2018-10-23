@@ -1,5 +1,5 @@
 RSpec.describe EmailWizard::Client do
-  it "has a version number" do
-    expect(EmailWizard::VERSION).not_to be nil
+  it "raises error if not cofigured" do
+    expect{EmailWizard::Client.configured?}.to raise_error(EmailWizard::NoConfigError)
   end
 end
