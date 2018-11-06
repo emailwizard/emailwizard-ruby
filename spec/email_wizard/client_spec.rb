@@ -27,4 +27,9 @@ RSpec.describe EmailWizard::Client do
     expect{client.fetch_template(template_name: 'test', payload: {})}.to raise_error(EmailWizard::ProjectUnknownError)
   end
 
+  it "builds url" do
+  	client = configured_client
+    uri = client.send(:build_uri, 1, 'template/fetch')
+    expect(uri.to_s).to eq('https://api.emailwizard.io/api/v1/projects/template/fetch')
+  end
 end
