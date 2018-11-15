@@ -1,5 +1,5 @@
 RSpec.describe EmailWizard::Config do
-  it "inits" do
+  it 'inits' do
     EmailWizard::Config.new(
       api_key: 1,
       provider: :sendgrid,
