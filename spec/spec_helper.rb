@@ -1,4 +1,5 @@
 require "bundler/setup"
+require 'webmock/rspec'
 require "email_wizard"
 
 RSpec.configure do |config|
