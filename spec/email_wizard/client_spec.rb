@@ -12,7 +12,9 @@ RSpec.describe EmailWizard::Client do
   end
 
   it 'raises error if not cofigured' do
-    expect { EmailWizard::Client.configured? }.to raise_error(EmailWizard::NoConfigError)
+    expect { EmailWizard::Client.configured? }.to raise_error(
+      EmailWizard::NoConfigError
+    )
   end
 
   it 'uses default project id if note set' do
@@ -25,7 +27,9 @@ RSpec.describe EmailWizard::Client do
   it 'throws an error if no project id' do
     client = configured_client
     client.current_project_id = nil
-    expect { client.fetch_template(template_name: 'test', payload: {}) }.to raise_error(EmailWizard::ProjectUnknownError)
+    expect do
+      client.fetch_template(template_name: 'test', payload: {})
+    end.to raise_error(EmailWizard::ProjectUnknownError)
   end
 
   it 'builds url' do
