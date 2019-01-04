@@ -10,27 +10,27 @@ module EmailWizard
 
     attr_accessor :current_project_id
 
-    def self.configured?
+    def configured?
       raise EmailWizard::NoConfigError if @config.nil?
     end
 
     def self.send_template; end
 
-    def self.fetch_template(project_id: nil, template_name:, payload:)
+    def fetch_template(project_id: nil, template_name:, payload:)
       post(project_id,
            'templates/fetch',
            template_name: template_name,
            payload: payload)
     end
 
-    def self.build_uri(project_id, action)
+    def build_uri(project_id, action)
       project_id ||= @current_project_id
       raise EmailWizard::ProjectUnknownError if project_id.nil?
 
       URI.join(API_URI, project_id.to_s + '/', action)
     end
 
-    def self.post(project_id, action, data)
+    def post(project_id, action, data)
       configured?
       uri = build_uri(project_id, action)
       req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')

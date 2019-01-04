@@ -1,6 +1,7 @@
 RSpec.describe EmailWizard::Client do
   def configured_client
-    EmailWizard::Client.config = EmailWizard::Config.new(
+    client = EmailWizard::Client.new
+    client.config = EmailWizard::Config.new(
       api_key: 1,
       provider: :sendgrid,
       provider_credentials: {
@@ -8,11 +9,11 @@ RSpec.describe EmailWizard::Client do
       },
       from: 'no-reply@example.org'
     )
-    EmailWizard::Client
+    client
   end
 
   it 'raises error if not cofigured' do
-    expect { EmailWizard::Client.configured? }.to raise_error(
+    expect { EmailWizard::Client.new.configured? }.to raise_error(
       EmailWizard::NoConfigError
     )
   end
