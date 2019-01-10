@@ -51,10 +51,21 @@ module EmailWizard
       https = Net::HTTP.new(uri.host, uri.port)
       https.use_ssl = true
       req = Net::HTTP::Post.new(uri.path, 'Content-Type' => 'application/json')
-      req.body = data.to_json
       req['Api-Key'] = @config.api_key
+      req.body = data.to_json
       res = https.request(req)
-      JSON.parse(res.body, symbolize_names: true)
+      body = JSON.parse(res.body, symbolize_names: true)
+      success?(res, body)
+
+      body
+    end
+
+    private
+
+    def success?(res, body)
+      return true unless res.code.to_i > 299
+
+      raise EmailWizard::DeliveryFailureError.new(errors: body[:errors])
     end
   end
 end
