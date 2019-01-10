@@ -47,4 +47,19 @@ RSpec.describe EmailWizard::Client do
     client = configured_client
     client.fetch_template(project_id: 1, template_name: 'test', payload: {})
   end
+
+  it 'sends message' do
+    stub_request(:post, API_URI + '1/templates/send')
+      .with(body: {
+              template_name: 'test',
+              payload: {},
+              subject: 'Test',
+              recipients: ['user@example.com'],
+              from: 'no-reply@example.org',
+              'sendgrid_credentials' => { api_key: 2 }
+            }).to_return(body: { html: '', text: '' }.to_json, status: 200)
+    client = configured_client
+    client.send_template(project_id: 1, template_name: 'test', subject: 'Test',
+                         recipients: ['user@example.com'], payload: {})
+  end
 end

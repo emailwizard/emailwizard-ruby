@@ -17,11 +17,26 @@ module EmailWizard
     def self.send_template; end
 
     def fetch_template(project_id: nil, template_name:, payload:)
+      configured?
       response = post(project_id,
                       'templates/fetch',
                       template_name: template_name,
                       payload: payload)
       Template.from_json(response)
+    end
+
+    def send_template(project_id: nil, template_name:, payload:,
+                      subject:, recipients:, from: nil)
+      configured?
+      data = @config.as_hash.merge(
+        template_name: template_name,
+        payload: payload,
+        subject: subject,
+        recipients: recipients
+      )
+      data[:from] = from unless from.nil?
+      response = post(project_id, 'templates/send', data)
+      Message.from_json(response)
     end
 
     def build_uri(project_id, action)
@@ -32,7 +47,6 @@ module EmailWizard
     end
 
     def post(project_id, action, data)
-      configured?
       uri = build_uri(project_id, action)
       https = Net::HTTP.new(uri.host, uri.port)
       https.use_ssl = true
