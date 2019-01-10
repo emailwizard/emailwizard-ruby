@@ -20,6 +20,15 @@ RSpec.describe EmailWizard::Client do
     )
   end
 
+  it 'raises error if status > 299' do
+    stub_request(:post, /.*/)
+      .to_return(body: { errors: ['Access denied'] }.to_json, status: 401)
+    client = configured_client
+    expect do
+      client.fetch_template(project_id: 1, template_name: 'test', payload: {})
+    end.to(raise_error { |e| expect(e.errors).to eq(['Access denied']) })
+  end
+
   it 'uses default project id if note set' do
     client = configured_client
     client.current_project_id = 1
