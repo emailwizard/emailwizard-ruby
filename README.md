@@ -20,7 +20,42 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Config client
+
+```ruby
+client = EmailWizard::Client.new
+client.config = EmailWizard::Config.new(
+  api_key: 1,
+  provider: :sendgrid,
+  provider_credentials: {
+    api_key: 2
+  },
+  from: 'no-reply@example.org'
+)
+```
+
+You can set default project id instead of passing it on each call:
+
+```ruby
+    client.current_project_id = 1
+```
+
+### Fetch template
+
+See https://docs.emailwizard.io/fetching_emails_api.html for details:
+
+```ruby
+client.fetch_template(template_name: 'hello', payload: {name: 'John Doe'})
+```
+
+### Send template
+
+See https://docs.emailwizard.io/sending_emails_api.html for details:
+
+```ruby
+client.send_template(template_name: 'hello', subject: 'Hello!',
+                     recipients: ['user@example.com'], payload: {name: 'John Doe'})
+```
 
 ## Development
 
