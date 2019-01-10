@@ -17,10 +17,11 @@ module EmailWizard
     def self.send_template; end
 
     def fetch_template(project_id: nil, template_name:, payload:)
-      post(project_id,
-           'templates/fetch',
-           template_name: template_name,
-           payload: payload)
+      response = post(project_id,
+                      'templates/fetch',
+                      template_name: template_name,
+                      payload: payload)
+      Template.from_json(response)
     end
 
     def build_uri(project_id, action)
@@ -33,12 +34,12 @@ module EmailWizard
     def post(project_id, action, data)
       configured?
       uri = build_uri(project_id, action)
-      req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
+      https = Net::HTTP.new(uri.host, uri.port)
+      https.use_ssl = true
+      req = Net::HTTP::Post.new(uri.path, 'Content-Type' => 'application/json')
       req.body = data.to_json
-      res = Net::HTTP.start(uri.hostname, uri.port) do |http|
-        http.request(req)
-      end
-      JSON.parse(res)
+      res = https.request(req)
+      JSON.parse(res.body, symbolize_names: true)
     end
   end
 end

@@ -1,4 +1,6 @@
 RSpec.describe EmailWizard::Client do
+  API_URI = 'https://api.emailwizard.io/api/v1/projects/'.freeze
+
   def configured_client
     client = EmailWizard::Client.new
     client.config = EmailWizard::Config.new(
@@ -22,7 +24,7 @@ RSpec.describe EmailWizard::Client do
     client = configured_client
     client.current_project_id = 1
     uri = client.send(:build_uri, 1, 'template/fetch')
-    expect(uri.to_s).to eq('https://api.emailwizard.io/api/v1/projects/1/template/fetch')
+    expect(uri.to_s).to eq(API_URI + '1/template/fetch')
   end
 
   it 'throws an error if no project id' do
@@ -35,7 +37,14 @@ RSpec.describe EmailWizard::Client do
 
   it 'builds url' do
     client = configured_client
-    uri = client.send(:build_uri, 1, 'template/fetch')
-    expect(uri.to_s).to eq('https://api.emailwizard.io/api/v1/projects/1/template/fetch')
+    uri = client.send(:build_uri, 1, 'templates/fetch')
+    expect(uri.to_s).to eq(API_URI + '1/templates/fetch')
+  end
+
+  it 'fetches template' do
+    stub_request(:post, API_URI + '1/templates/fetch')
+      .to_return(body: { html: '', text: '' }.to_json, status: 200)
+    client = configured_client
+    client.fetch_template(project_id: 1, template_name: 'test', payload: {})
   end
 end
