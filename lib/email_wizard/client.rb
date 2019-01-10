@@ -52,6 +52,7 @@ module EmailWizard
       https.use_ssl = true
       req = Net::HTTP::Post.new(uri.path, 'Content-Type' => 'application/json')
       req.body = data.to_json
+      req['Api-Key'] = @config.api_key
       res = https.request(req)
       JSON.parse(res.body, symbolize_names: true)
     end

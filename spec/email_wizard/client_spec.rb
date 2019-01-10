@@ -48,6 +48,14 @@ RSpec.describe EmailWizard::Client do
     client.fetch_template(project_id: 1, template_name: 'test', payload: {})
   end
 
+  it 'sets api-key header template' do
+    stub_request(:post, /.*/)
+      .with(headers: { 'Api-key' => 1 })
+      .to_return(body: { html: '', text: '' }.to_json, status: 200)
+    client = configured_client
+    client.fetch_template(project_id: 1, template_name: 'test', payload: {})
+  end
+
   it 'sends message' do
     stub_request(:post, API_URI + '1/templates/send')
       .with(body: {
