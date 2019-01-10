@@ -1,6 +1,6 @@
 # EmailWizard
 
-Ruby integration for emailwizard
+Ruby integration for [EmailWizard.io](https://www.emailwizard.io/)
 
 ## Installation
 
@@ -23,15 +23,15 @@ Or install it yourself as:
 ### Config client
 
 ```ruby
-client = EmailWizard::Client.new
-client.config = EmailWizard::Config.new(
-  api_key: 1,
-  provider: :sendgrid,
-  provider_credentials: {
-    api_key: 2
-  },
-  from: 'no-reply@example.org'
-)
+    client = EmailWizard::Client.new
+    client.config = EmailWizard::Config.new(
+      api_key: 1,
+      provider: :sendgrid,
+      provider_credentials: {
+        api_key: 2
+      },
+      from: 'no-reply@example.org'
+    )
 ```
 
 You can set default project id instead of passing it on each call:
@@ -45,7 +45,11 @@ You can set default project id instead of passing it on each call:
 See https://docs.emailwizard.io/fetching_emails_api.html for details:
 
 ```ruby
-client.fetch_template(template_name: 'hello', payload: {name: 'John Doe'})
+    template = client.fetch_template(template_name: 'hello', payload: {name: 'John Doe'})
+
+    # in case of status code > 299, Emailwizard::DeliveryFailure is thrown
+    template.html  # ==> "<html> ...."
+    template.text  # ==> "Mail text"
 ```
 
 ### Send template
@@ -53,8 +57,13 @@ client.fetch_template(template_name: 'hello', payload: {name: 'John Doe'})
 See https://docs.emailwizard.io/sending_emails_api.html for details:
 
 ```ruby
-client.send_template(template_name: 'hello', subject: 'Hello!',
+    message = client.send_template(template_name: 'hello', subject: 'Hello!',
                      recipients: ['user@example.com'], payload: {name: 'John Doe'})
+
+    # in case of status code > 299, Emailwizard::DeliveryFailure is thrown
+    message.id  # message id 
+    message.messages  # ==> messages - array with messages.
+                      # Messages can be string or json objects, depending on service used.
 ```
 
 ## Development
@@ -65,7 +74,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/email_wizard.
+Bug reports and pull requests are welcome on GitHub at https://github.com/emailwizard/emailwizard-ruby.
 
 ## License
 
