@@ -12,7 +12,6 @@ module EmailWizard
     end
 
     def self.from_json(json)
-      puts(json)
       Template.new(
         html: Base64.decode64(json[:html]),
         text: Base64.decode64(json[:text])
